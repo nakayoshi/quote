@@ -21,5 +21,5 @@ Due to Discord's API limitation, the number of messages you can go back is restr
 ### Why my message has a badge *BOT*?
 Since Quote uses Discord's Webhook API to replace your message, the embed was actually sent by the bot though it is pretended as if you sent it.
 
-### This is an awesome idea! Why don't Discord implement it officially?
+### This is an awesome idea! Why doesn't the Discord team implement it officially?
 I don't know ¯\\\_(ツ)\_/¯ Tell them to hire me.
