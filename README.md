@@ -1,4 +1,7 @@
 # <img alt="quote" src="https://i.imgur.com/iqDW7gp.png" width="280px" />
+
+![eyecatch](https://i.imgur.com/dlglta1.png)
+
 > Quote allows you to quote messages in a better way
 
 ## Usage
