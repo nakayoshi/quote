@@ -1,11 +1,14 @@
 {
   "name": "quote",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "repository": "https://github.com/neet/quote.git",
   "author": "Ryo Igarashi <n33t5hin@gmail.com>",
-  "license": "AGPL-v3",
+  "license": "AGPL-3.0",
   "private": false,
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@types/node": "^13.7.1",
     "discord.js": "discordjs/discord.js",
