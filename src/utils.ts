@@ -1,15 +1,27 @@
-import Discord from 'discord.js';
+import Discord from "discord.js";
 
-export const fetchMessageByText = async (text: string, channel: Discord.Channel) => {
+export const fetchMessageByText = async (
+  text: string,
+  channel: Discord.Channel,
+  excludes: string[] = []
+) => {
   if (!(channel instanceof Discord.TextChannel)) return;
 
   return channel.messages
     .fetch({ limit: 100 })
     .then(collection => collection.array())
-    .then(messages => messages.find(message => message.content.includes(text)));
+    .then(messages =>
+      messages.find(
+        message =>
+          !excludes.includes(message.id) && message.content.includes(text)
+      )
+    );
 };
 
-export const fetchMessageById = async (id: string, channel: Discord.Channel) => {
+export const fetchMessageById = async (
+  id: string,
+  channel: Discord.Channel
+) => {
   if (!(channel instanceof Discord.TextChannel)) return;
 
   return channel.messages
@@ -18,7 +30,10 @@ export const fetchMessageById = async (id: string, channel: Discord.Channel) => 
     .then(messages => messages.find(message => message.id === id));
 };
 
-export const fetchChannelById = (channels: Discord.ChannelStore, id: string) => {
+export const fetchChannelById = (
+  channels: Discord.ChannelStore,
+  id: string
+) => {
   return channels.find(channel => {
     return channel.id === id;
   });
@@ -51,7 +66,10 @@ export const toEmbed = (message: Discord.Message) => {
   return embed;
 };
 
-export const fetchWebhook = async (channel: Discord.TextChannel, selfId: string) => {
+export const fetchWebhook = async (
+  channel: Discord.TextChannel,
+  selfId: string
+) => {
   const webhook = await channel
     .fetchWebhooks()
     .then(webhooks =>
@@ -82,4 +100,3 @@ export const mimic = async (
     ...options
   });
 };
-

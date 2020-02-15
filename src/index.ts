@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import Discord from "discord.js";
 import { fromEvent } from "rxjs";
 import { first } from "rxjs/operators";
-import { filterBot, filterMatch, filterNotMatch } from "./operators";
+import { filterBot, filterMatch } from "./operators";
 import {
   mimic,
   toEmbed,
@@ -11,7 +11,7 @@ import {
   fetchMessageByText,
   fetchMessageById
 } from "./utils";
-import { URL, MARKDOWN_ID, MARKDOWN_TEXT } from "./regexps";
+import { URL, MARKDOWN } from "./regexps";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
@@ -33,44 +33,21 @@ const main = async () => {
    * > message
    */
   message$
-    .pipe(filterBot, filterMatch(MARKDOWN_TEXT), filterNotMatch(MARKDOWN_ID))
+    .pipe(filterBot, filterMatch(MARKDOWN))
     .subscribe(async message => {
       if (!client.user?.id) return;
 
-      const match = message.content.match(MARKDOWN_TEXT);
-      if (!match?.length) return;
+      const match = message.content.match(MARKDOWN);
+      if (!match?.groups?.text) return;
 
-      const text = match.join("\n");
-      const quote = await fetchMessageByText(text, message.channel);
+      const { text } = match.groups
+      const quote = await fetchMessageByText(text, message.channel, [
+        message.id
+      ]);
       if (!quote) return;
 
       await mimic(
-        message.content.replace(MARKDOWN_TEXT, ""),
-        message,
-        client.user.id,
-        { embeds: [toEmbed(quote)] }
-      );
-    });
-
-  /**
-   * Markdown style quotation but id
-   * @example
-   * > 123456789
-   */
-  message$
-    .pipe(filterBot, filterMatch(MARKDOWN_ID))
-    .subscribe(async message => {
-      if (!client.user?.id) return;
-
-      const match = message.content.match(MARKDOWN_ID);
-      if (!match?.groups?.id) return;
-
-      const { id } = match.groups;
-      const quote = await fetchMessageById(id, message.channel);
-      if (!quote) return;
-
-      await mimic(
-        message.content.replace(MARKDOWN_ID, ""),
+        message.content.replace(MARKDOWN, ""),
         message,
         client.user.id,
         { embeds: [toEmbed(quote)] }
