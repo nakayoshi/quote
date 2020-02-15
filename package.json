@@ -1,0 +1,16 @@
+{
+  "name": "quote",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": "https://github.com/neet/quote.git",
+  "author": "Ryo Igarashi <n33t5hin@gmail.com>",
+  "license": "AGPL-v3",
+  "private": false,
+  "dependencies": {
+    "@types/node": "^13.7.1",
+    "discord.js": "discordjs/discord.js",
+    "dotenv": "^8.2.0",
+    "rxjs": "^6.5.4",
+    "typescript": "^3.7.5"
+  }
+}
