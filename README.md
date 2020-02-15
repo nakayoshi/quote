@@ -12,7 +12,7 @@ Find a message that contains `text` from the same channel, and replace your mess
 Find a message from the URL and replace your message with an embed.
 
 ## How it works
-Quote uses Discord's Webhook API to send messages to customize the username and the avatar. We delete the original message and use this technique to pretend the message as if it was sent by another user.
+Quote uses Discord's Webhook API to send messages with a customized username and an avatar. We delete the original message and use this technique to pretend the message as if it was sent by another user.
 
 ## FAQ
 ### Quote didn't find the message despite I used the command properly
