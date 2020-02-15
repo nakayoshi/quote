@@ -82,6 +82,9 @@ const mimic = async (
   selfId: string,
   options: Discord.WebhookMessageOptions = {}
 ) => {
+  if (!original.deletable) return;
+  await original.delete();
+
   if (!(original.channel instanceof Discord.TextChannel)) return;
   const webhook = await fetchWebhook(original.channel, selfId);
 
