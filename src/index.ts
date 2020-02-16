@@ -68,7 +68,7 @@ message$
 message$
   .pipe(filter(not(isBot)), filter(match(MARKDOWN)))
   .subscribe(async message => {
-    if (!client.user?.id) return;
+    if (!client.user) return;
 
     const match = message.content.match(MARKDOWN);
     if (!match?.groups?.text) return;
@@ -95,7 +95,7 @@ message$
 message$
   .pipe(filter(not(isBot)), filter(match(URL)))
   .subscribe(async message => {
-    if (!client.user?.id) return;
+    if (!client.user) return;
 
     const match = message.content.match(URL);
     if (!match?.groups?.channelId || !match?.groups?.messageId) return;
