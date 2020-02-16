@@ -65,12 +65,12 @@ export const toEmbed = (message: Discord.Message) => {
     .setTitle(`#${title}`)
     .setDescription(message.content)
     .setURL(message.url)
-    .setAuthor(getNickname(message), avatar, message.url)
+    .setAuthor(getNickname(message), avatar)
     .setTimestamp(message.createdTimestamp)
     .setFooter("Quote");
 
-  const thumbnail = message.attachments.first()?.url;
-  if (thumbnail) embed.setThumbnail(thumbnail);
+  const image = message.attachments.first();
+  if (image) embed.setImage(image.url);
 
   return embed;
 };
