@@ -42,10 +42,10 @@ message$
       **Quote** allows you to quote messages in a better way.
 
       > \`> <text>\`
-      Quote message that contains <text> from the same channel.
+      Quote a message that contains \`<text>\` from the same channel and replace your message with an embed.
 
       > \`<URL>\`
-      Quote message by URL.
+      Quote a message by the \`<URL>\` and replace your message with an embed.
 
       > \`/help\`
       Shows usage of Quote.
