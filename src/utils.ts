@@ -39,19 +39,12 @@ export const fetchMessageById = async (
     .then(messages => messages.find(message => message.id === id));
 };
 
-export const fetchChannelById = (
-  channels: Discord.ChannelStore,
-  id: string
-) => {
-  return channels.find(channel => {
-    return channel.id === id;
-  });
-};
+export const fetchChannelById = (channels: Discord.ChannelStore, id: string) =>
+  channels.find(channel => channel.id === id);
 
 export const getNickname = (message: Discord.Message) => {
   const member = message.guild.member(message.author);
-  if (member) return member.displayName;
-  return message.author.tag;
+  return member ? member.displayName : message.author.tag;
 };
 
 export const toEmbed = (message: Discord.Message) => {
