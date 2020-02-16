@@ -4,6 +4,9 @@
 
 > Quote allows you to quote messages in a better way
 
+
+### **[🎫 Invite to your server](https://discordapp.com/oauth2/authorize?client_id=678185722473349120&scope=bot&permissions=536964096)**
+
 ## Usage
 
 ### `> <text>`
@@ -17,6 +20,14 @@ Quote a message by the URL and replace your message with an embed.
 ### `/help`
 
 Shows this help
+
+## Required Permissions
+- Manage Webhooks
+- Read Messages
+- Send Messages
+- Manage Messages
+- Embed Links
+- Read Message History
 
 ## How it works
 
