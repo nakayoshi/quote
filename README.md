@@ -21,6 +21,14 @@ Quote a message by the URL and replace your message with an embed.
 
 Shows this help
 
+## Required Permissions
+- Manage Webhooks
+- Read Messages
+- Send Messages
+- Manage Messages
+- Embed Links
+- Read Message History
+
 ## How it works
 
 Quote uses Discord's Webhook API to send messages with a customized username and an avatar. We delete the original message and use this technique to pretend the message as if it was sent by another user.
