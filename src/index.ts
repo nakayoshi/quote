@@ -25,6 +25,11 @@ const message$ = fromEvent<Discord.Message>(client, "message");
 ready$.pipe(first()).subscribe(() => {
   if (!client.user) return;
   console.log(`Logged in as ${client.user.tag}`);
+
+  client.user.setActivity({
+    type: "LISTENING",
+    name: "/help"
+  });
 });
 
 /**
