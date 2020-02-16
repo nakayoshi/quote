@@ -4,6 +4,9 @@
 
 > Quote allows you to quote messages in a better way
 
+
+### **[🎫 Invite to your server](https://discordapp.com/oauth2/authorize?client_id=678185722473349120&scope=bot&permissions=536964096)**
+
 ## Usage
 
 ### `> <text>`
