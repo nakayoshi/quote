@@ -1,12 +1,15 @@
 import path from "path";
 import dotenv from "dotenv";
 import Discord from "discord.js";
+import outdent from "outdent";
 import { fromEvent } from "rxjs";
-import { first } from "rxjs/operators";
-import { filterBot, filterMatch } from "./operators";
+import { first, filter } from "rxjs/operators";
 import {
   mimic,
   toEmbed,
+  isBot,
+  match,
+  not,
   fetchChannelById,
   fetchMessageByText,
   fetchMessageById
@@ -15,51 +18,78 @@ import { URL, MARKDOWN } from "./regexps";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
-const main = async () => {
-  const client = new Discord.Client();
-  const ready$ = fromEvent<void>(client, "ready");
-  const message$ = fromEvent<Discord.Message>(client, "message");
+const client = new Discord.Client();
+const ready$ = fromEvent<void>(client, "ready");
+const message$ = fromEvent<Discord.Message>(client, "message");
 
-  client.login(process.env.DISCORD_TOKEN);
+ready$.pipe(first()).subscribe(() => {
+  if (!client.user) return;
+  console.log(`Logged in as ${client.user.tag}`);
+});
 
-  ready$.pipe(first()).subscribe(() => {
-    if (!client.user) return;
-    console.log(`Logged in as ${client.user.tag}`);
+/**
+ * Help
+ * @example
+ * /help
+ */
+message$
+  .pipe(
+    filter(message => message.content.startsWith("/help")),
+    filter(not(isBot))
+  )
+  .subscribe(async message => {
+    await message.channel.send(outdent`
+      **Quote** allows you to quote messages in a better way.
+
+      > \`> <text>\`
+      Quote message that contains <text> from the same channel.
+
+      > \`<URL>\`
+      Quote message by URL.
+
+      > \`/help\`
+      Shows usage of Quote.
+
+      See also GitHub for more information:
+      https://github.com/neet/quote
+    `);
   });
 
-  /**
-   * Markdown style quotation
-   * @example
-   * > message
-   */
-  message$
-    .pipe(filterBot, filterMatch(MARKDOWN))
-    .subscribe(async message => {
-      if (!client.user?.id) return;
+/**
+ * Markdown style quotation
+ * @example
+ * > message
+ */
+message$
+  .pipe(filter(not(isBot)), filter(match(MARKDOWN)))
+  .subscribe(async message => {
+    if (!client.user?.id) return;
 
-      const match = message.content.match(MARKDOWN);
-      if (!match?.groups?.text) return;
+    const match = message.content.match(MARKDOWN);
+    if (!match?.groups?.text) return;
 
-      const { text } = match.groups
-      const quote = await fetchMessageByText(text, message.channel, [
-        message.id
-      ]);
-      if (!quote) return;
+    const { text } = match.groups;
+    const quote = await fetchMessageByText(text, message.channel, [message.id]);
+    if (!quote) return;
 
-      await mimic(
-        message.content.replace(MARKDOWN, ""),
-        message,
-        client.user.id,
-        { embeds: [toEmbed(quote)] }
-      );
-    });
+    await mimic(
+      message.content.replace(MARKDOWN, ""),
+      message,
+      client.user.id,
+      {
+        embeds: [toEmbed(quote)]
+      }
+    );
+  });
 
-  /**
-   * URL quotation
-   * @example
-   * https://discordapp.com/channels/123/456/789
-   */
-  message$.pipe(filterBot, filterMatch(URL)).subscribe(async message => {
+/**
+ * URL quotation
+ * @example
+ * https://discordapp.com/channels/123/456/789
+ */
+message$
+  .pipe(filter(not(isBot)), filter(match(URL)))
+  .subscribe(async message => {
     if (!client.user?.id) return;
 
     const match = message.content.match(URL);
@@ -74,6 +104,7 @@ const main = async () => {
       embeds: [toEmbed(quote)]
     });
   });
-};
 
-main();
+(async () => {
+  await client.login(process.env.DISCORD_TOKEN);
+})();

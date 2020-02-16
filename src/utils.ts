@@ -1,5 +1,14 @@
 import Discord from "discord.js";
 
+export const not = <T extends unknown[]>(func: (...args: T) => boolean) => (
+  ...args: T
+) => !func(...args);
+
+export const isBot = (message: Discord.Message) => message.author.bot;
+
+export const match = (regexp: RegExp) => (message: Discord.Message) =>
+  regexp.test(message.content);
+
 export const fetchMessageByText = async (
   text: string,
   channel: Discord.Channel,

@@ -13,6 +13,7 @@
     "@types/node": "^13.7.1",
     "discord.js": "discordjs/discord.js",
     "dotenv": "^8.2.0",
+    "outdent": "^0.7.0",
     "rxjs": "^6.5.4",
     "typescript": "^3.7.5"
   }
