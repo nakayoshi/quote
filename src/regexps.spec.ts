@@ -29,7 +29,7 @@ describe("RegExps", () => {
       "/443678718792040448" +
       "/678429687126556692"
     ).match(URL);
-    expect(match?.groups?.serverId).toBe("443502244734828556");
+    expect(match?.groups?.guildId).toBe("443502244734828556");
     expect(match?.groups?.channelId).toBe("443678718792040448");
     expect(match?.groups?.messageId).toBe("678429687126556692");
   });
@@ -42,7 +42,7 @@ describe("RegExps", () => {
       "/443678718792040448" +
       "/678429687126556692"
     ).match(URL);
-    expect(match?.groups?.serverId).toBe("443502244734828556");
+    expect(match?.groups?.guildId).toBe("443502244734828556");
     expect(match?.groups?.channelId).toBe("443678718792040448");
     expect(match?.groups?.messageId).toBe("678429687126556692");
   });

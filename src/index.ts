@@ -98,9 +98,19 @@ message$
     if (!client.user) return;
 
     const match = message.content.match(URL);
-    if (!match?.groups?.channelId || !match?.groups?.messageId) return;
 
-    const { channelId, messageId } = match.groups;
+    if (
+      !match?.groups?.channelId ||
+      !match?.groups?.messageId ||
+      !match?.groups?.guildId
+    ) {
+      return;
+    }
+
+    const { guildId, channelId, messageId } = match.groups;
+
+    if (guildId !== message.guild.id) return;
+
     const channel = fetchChannelById(client.channels, channelId);
     const quote = await fetchMessageById(messageId, channel);
     if (!quote) return;
