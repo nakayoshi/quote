@@ -13,11 +13,11 @@ const client = new Discord.Client();
 const ready$ = fromEvent<void>(client, "ready");
 const message$ = fromEvent<Discord.Message>(client, "message");
 
-ready$.pipe(first()).subscribe(() => {
+ready$.pipe(first()).subscribe(async () => {
   if (!client.user) return;
   console.log(`Logged in as ${client.user.tag}`);
 
-  client.user.setActivity({
+  await client.user.setActivity({
     type: "LISTENING",
     name: "/help"
   });
