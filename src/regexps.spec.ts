@@ -21,15 +21,6 @@ describe("RegExps", () => {
     expect(match?.groups?.text).toBe("lorem ipsum");
   });
 
-  it("matches multi-line markdown blockquote", () => {
-    const match = outdent`
-    blah blah
-    > lorem ipsum
-    blah blah
-    `.match(MARKDOWN);
-    expect(match?.groups?.text).toBe("lorem ipsum");
-  });
-
   it("does not match with emoji", () => {
     const match = `<:foo:123> <:bar:456>`.match(MARKDOWN);
     expect(match).toBeNull();

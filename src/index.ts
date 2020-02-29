@@ -4,7 +4,15 @@ import Discord from "discord.js";
 import outdent from "outdent";
 import { fromEvent } from "rxjs";
 import { first, filter } from "rxjs/operators";
-import { mimic, toEmbed, isBot, match, not, fetchMessageByText } from "./utils";
+import {
+  mimic,
+  toEmbed,
+  isBot,
+  match,
+  not,
+  fetchMessageByText,
+  removeEmptyLines
+} from "./utils";
 import { URL, MARKDOWN } from "./regexps";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
@@ -61,7 +69,7 @@ message$
   .subscribe(async message => {
     if (!client.user) return;
 
-    const [_, ...fragments] = message.content.match(new RegExp(MARKDOWN, "gm"));
+    const fragments = message.content.match(new RegExp(MARKDOWN, "gm")) ?? [];
     const text = fragments
       .map(fragment => fragment.match(MARKDOWN)?.groups?.text)
       .filter(match => !!match)
@@ -70,14 +78,13 @@ message$
     const quote = await fetchMessageByText(text, message.channel, [message.id]);
     if (!quote) return;
 
-    await mimic(
-      message.content.replace(new RegExp(MARKDOWN, "gm"), ""),
-      message,
-      client.user.id,
-      {
-        embeds: [toEmbed(quote)]
-      }
+    const content = removeEmptyLines(
+      message.content.replace(new RegExp(MARKDOWN, "gm"), "")
     );
+
+    await mimic(content, message, client.user.id, {
+      embeds: [toEmbed(quote)]
+    });
   });
 
 /**
@@ -90,10 +97,11 @@ message$
   .subscribe(async message => {
     if (!client.user) return;
 
-    const [_, ...urls] = message.content.match(new RegExp(URL, "gm"));
+    const urls = message.content.match(new RegExp(URL, "gm")) ?? [];
+    const matches = urls.map(url => url.match(URL));
     const embeds: Discord.MessageEmbed[] = [];
 
-    for (const match of urls.map(url => url.match(URL))) {
+    for (const match of matches) {
       if (
         !match?.groups?.channelId ||
         !match?.groups?.messageId ||
@@ -114,14 +122,13 @@ message$
 
     if (!embeds.length) return;
 
-    await mimic(
-      message.content.replace(new RegExp(URL, "gm"), ""),
-      message,
-      client.user.id,
-      {
-        embeds
-      }
+    const content = removeEmptyLines(
+      message.content.replace(new RegExp(URL, "gm"), "")
     );
+
+    await mimic(content, message, client.user.id, {
+      embeds
+    });
   });
 
 (async () => {

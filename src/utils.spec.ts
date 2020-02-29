@@ -1,5 +1,6 @@
 import Discord from "discord.js";
-import { not, isBot, match } from "./utils";
+import outdent from "outdent";
+import { not, isBot, match, removeEmptyLines } from "./utils";
 
 it("negates value", () => {
   expect(not(() => true)()).toBe(false);
@@ -21,4 +22,18 @@ it("returns true when content matches", () => {
       content: "hello world"
     } as Discord.Message)
   ).toBe(true);
+});
+
+it("removes empty lines", () => {
+  expect(
+    removeEmptyLines(outdent`
+  hello
+
+
+  bye
+  `)
+  ).toBe(outdent`
+  hello
+  bye
+  `);
 });

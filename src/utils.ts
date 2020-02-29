@@ -70,7 +70,7 @@ export const fetchWebhook = async (
 };
 
 export const mimic = async (
-  plain: string,
+  content: string,
   original: Discord.Message,
   selfId: string,
   options: Discord.WebhookMessageOptions = {}
@@ -81,9 +81,12 @@ export const mimic = async (
   if (!(original.channel instanceof Discord.TextChannel)) return;
   const webhook = await fetchWebhook(original.channel, selfId);
 
-  await webhook.send(plain, {
+  await webhook.send(content, {
     username: getNickname(original),
     avatarURL: original.author.avatarURL(),
     ...options
   });
 };
+
+export const removeEmptyLines = (text: string) =>
+  text.replace(/^\s*\n/gm, "").trim();
