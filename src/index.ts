@@ -4,16 +4,7 @@ import Discord from "discord.js";
 import outdent from "outdent";
 import { fromEvent } from "rxjs";
 import { first, filter } from "rxjs/operators";
-import {
-  mimic,
-  toEmbed,
-  isBot,
-  match,
-  not,
-  fetchChannelById,
-  fetchMessageByText,
-  fetchMessageById
-} from "./utils";
+import { mimic, toEmbed, isBot, match, not, fetchMessageByText } from "./utils";
 import { URL, MARKDOWN } from "./regexps";
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
@@ -108,11 +99,12 @@ message$
     }
 
     const { guildId, channelId, messageId } = match.groups;
-
     if (guildId !== message.guild.id) return;
 
-    const channel = fetchChannelById(client.channels, channelId);
-    const quote = await fetchMessageById(messageId, channel);
+    const channel = await client.channels.fetch(channelId);
+    if (!(channel instanceof Discord.TextChannel)) return;
+
+    const quote = await channel.messages.fetch(messageId);
     if (!quote) return;
 
     await mimic(message.content.replace(URL, ""), message, client.user.id, {

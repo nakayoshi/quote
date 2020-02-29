@@ -27,18 +27,6 @@ export const fetchMessageByText = async (
     );
 };
 
-export const fetchMessageById = async (
-  id: string,
-  channel: Discord.Channel
-) => {
-  if (!(channel instanceof Discord.TextChannel)) return;
-
-  return channel.messages.fetch(id);
-};
-
-export const fetchChannelById = (channels: Discord.ChannelStore, id: string) =>
-  channels.find(channel => channel.id === id);
-
 export const getNickname = (message: Discord.Message) => {
   const member = message.guild.member(message.author);
   return member ? member.displayName : message.author.tag;
