@@ -33,10 +33,7 @@ export const fetchMessageById = async (
 ) => {
   if (!(channel instanceof Discord.TextChannel)) return;
 
-  return channel.messages
-    .fetch({ limit: 100 })
-    .then(collection => collection.array())
-    .then(messages => messages.find(message => message.id === id));
+  return channel.messages.fetch(id);
 };
 
 export const fetchChannelById = (channels: Discord.ChannelStore, id: string) =>
