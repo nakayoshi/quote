@@ -61,15 +61,17 @@ message$
   .subscribe(async message => {
     if (!client.user) return;
 
-    const match = message.content.match(MARKDOWN);
-    if (!match?.groups?.text) return;
+    const [_, ...fragments] = message.content.match(new RegExp(MARKDOWN, "gm"));
+    const text = fragments
+      .map(fragment => fragment.match(MARKDOWN)?.groups?.text)
+      .filter(match => !!match)
+      .join("\n");
 
-    const { text } = match.groups;
     const quote = await fetchMessageByText(text, message.channel, [message.id]);
     if (!quote) return;
 
     await mimic(
-      message.content.replace(MARKDOWN, ""),
+      message.content.replace(new RegExp(MARKDOWN, "gm"), ""),
       message,
       client.user.id,
       {
@@ -88,28 +90,38 @@ message$
   .subscribe(async message => {
     if (!client.user) return;
 
-    const match = message.content.match(URL);
+    const [_, ...urls] = message.content.match(new RegExp(URL, "gm"));
+    const embeds: Discord.MessageEmbed[] = [];
 
-    if (
-      !match?.groups?.channelId ||
-      !match?.groups?.messageId ||
-      !match?.groups?.guildId
-    ) {
-      return;
+    for (const match of urls.map(url => url.match(URL))) {
+      if (
+        !match?.groups?.channelId ||
+        !match?.groups?.messageId ||
+        !match?.groups?.guildId
+      ) {
+        continue;
+      }
+
+      const { guildId, channelId, messageId } = match.groups;
+      if (guildId !== message.guild.id) continue;
+
+      const channel = await client.channels.fetch(channelId);
+      if (!(channel instanceof Discord.TextChannel)) continue;
+
+      const quote = await channel.messages.fetch(messageId);
+      embeds.push(toEmbed(quote));
     }
 
-    const { guildId, channelId, messageId } = match.groups;
-    if (guildId !== message.guild.id) return;
+    if (!embeds.length) return;
 
-    const channel = await client.channels.fetch(channelId);
-    if (!(channel instanceof Discord.TextChannel)) return;
-
-    const quote = await channel.messages.fetch(messageId);
-    if (!quote) return;
-
-    await mimic(message.content.replace(URL, ""), message, client.user.id, {
-      embeds: [toEmbed(quote)]
-    });
+    await mimic(
+      message.content.replace(new RegExp(URL, "gm"), ""),
+      message,
+      client.user.id,
+      {
+        embeds
+      }
+    );
   });
 
 (async () => {
