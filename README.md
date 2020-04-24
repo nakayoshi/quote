@@ -45,7 +45,7 @@ There's several possible scenarios. Check the following cases:
 #### Permisson is not enough
 See *Required Permissions* section above and give enough permissions for running Quote.
 
-#### 2FA (Two-factor Authentication) is required on your server
+#### 2FA (Two-Factor Authentication) must be disabled.
 Since Quote using some admin-level features such as "Manage Messages", you need to disable 2FA otherwise it will not work properly.
 
 ### Why my message has a badge _BOT_?
