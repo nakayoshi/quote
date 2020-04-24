@@ -46,3 +46,48 @@ Since Quote uses Discord's Webhook API to replace your message, the embed was ac
 ### This is an awesome idea! Why doesn't the Discord team implement it officially?
 
 I don't know ¯\\\_(ツ)\_/¯ Tell them to hire me.
+
+## Deployment
+### Requirements
+ - Node.js >= 12
+ - Yarn
+ - Git
+
+First of all, clone this repository using git.
+
+```
+git clone https://github.com/neet/quote.git
+```
+
+Copy the example of cofiguration file then edit it
+
+```
+cp .env.example .env
+vim .env
+```
+
+Here's the detail of the environment variables
+
+| env | nullability | description |
+| :-  | :- | :- |
+| `DISCORD_TOKEN` | **required** | Access token of your Discord bot |
+| `DISCORD_WEBHOOK_NAME` | optional | Namespace of Webhook API which will be used for identifying channels. Defaults to `quote` |
+| `NODE_ENV` | optional | You can set `procution` to enable some optimisations | 
+
+Then, install Node.js dependencies with Yarn
+
+```
+yarn
+```
+
+Then build the programme written in TypeScript into runnable JavaScript
+
+```
+yarn run build
+```
+
+Finally, you can start the bot by the following command:
+
+```
+node ./dist/index.js
+```
