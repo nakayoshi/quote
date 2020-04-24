@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@types/node": "^13.7.1",
-    "discord.js": "discordjs/discord.js",
+    "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "outdent": "^0.7.0",
     "rxjs": "^6.5.4",

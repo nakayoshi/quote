@@ -28,12 +28,12 @@ export const fetchMessageByText = async (
 };
 
 export const getNickname = (message: Discord.Message) => {
-  const member = message.guild.member(message.author);
+  const member = message?.guild?.member(message.author);
   return member ? member.displayName : message.author.tag;
 };
 
 export const toEmbed = (message: Discord.Message) => {
-  const avatar = message.author.avatarURL({ format: "png", size: 64 });
+  const nickname = getNickname(message);
   const title =
     message.channel instanceof Discord.TextChannel
       ? message.channel.name
@@ -43,9 +43,15 @@ export const toEmbed = (message: Discord.Message) => {
     .setTitle(`#${title}`)
     .setDescription(message.content)
     .setURL(message.url)
-    .setAuthor(getNickname(message), avatar)
     .setTimestamp(message.createdTimestamp)
     .setFooter("Quote");
+
+  const avatar = message.author.avatarURL({ format: "png", size: 64 });
+  if (avatar) {
+    embed.setAuthor(nickname, avatar);
+  } else {
+    embed.setAuthor(nickname);
+  }
 
   const image = message.attachments.first();
   if (image) embed.setImage(image.url);
@@ -69,22 +75,25 @@ export const fetchWebhook = async (
   return channel.createWebhook(process.env.DISCORD_WEBHOOK_NAME ?? "quote");
 };
 
+type WebhookSendParam = (Discord.WebhookMessageOptions & { split?: false });
+
 export const mimic = async (
   content: string,
   original: Discord.Message,
   selfId: string,
-  options: Discord.WebhookMessageOptions = {}
+  options: WebhookSendParam = {},
 ) => {
   if (!original.deletable) return;
   await original.delete();
 
   if (!(original.channel instanceof Discord.TextChannel)) return;
   const webhook = await fetchWebhook(original.channel, selfId);
+  const avatarURL = original.author.avatarURL();
 
   await webhook.send(content, {
+    avatarURL: avatarURL ?? undefined,
     username: getNickname(original),
-    avatarURL: original.author.avatarURL(),
-    ...options
+    ...options,
   });
 };
 

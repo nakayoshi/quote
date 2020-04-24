@@ -96,6 +96,7 @@ message$
   .pipe(filter(not(isBot)), filter(match(URL)))
   .subscribe(async message => {
     if (!client.user) return;
+    if (!message.guild) return;
 
     const urls = message.content.match(new RegExp(URL, "gm")) ?? [];
     const matches = urls.map(url => url.match(URL));
