@@ -81,7 +81,7 @@ Here's the detail of the environment variables
 | :-  | :- | :- |
 | `DISCORD_TOKEN` | **required** | Access token of your Discord bot |
 | `DISCORD_WEBHOOK_NAME` | optional | Namespace of Webhook API which will be used for identifying channels. Defaults to `quote` |
-| `NODE_ENV` | optional | You can set `procution` to enable some optimisations | 
+| `NODE_ENV` | optional | You can set `production` to enable some optimisations | 
 
 Then, install Node.js dependencies with Yarn
 
