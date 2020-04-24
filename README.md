@@ -39,6 +39,15 @@ Quote uses Discord's Webhook API to send messages with a customized username and
 
 Due to Discord's API limitation, the number of messages you can go back is restricted up to 100. Alternatively, we provide another way that uses URL to quote so you can use it to avoid the issue.
 
+### Quote doesn't work on my server! What's worng with it?
+There's several possible scenarios. Check the following cases:
+
+#### Permisson is not enough
+See *Required Permissions* section above and give enough permissions for running Quote.
+
+#### 2FA (Two-factor Authentication) is required on your server
+Since Quote using some admin-level features such as "Manage Messages", you need to disable 2FA otherwise it will not work properly.
+
 ### Why my message has a badge _BOT_?
 
 Since Quote uses Discord's Webhook API to replace your message, the embed was actually sent by the bot though it is pretended as if you sent it.
