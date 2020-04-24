@@ -39,7 +39,7 @@ Quote uses Discord's Webhook API to send messages with a customized username and
 
 Due to Discord's API limitation, the number of messages you can go back is restricted up to 100. Alternatively, we provide another way that uses URL to quote so you can use it to avoid the issue.
 
-### Quote doesn't work on my server! What's worng with it?
+### Quote doesn't work on my server! What's wrong?
 There's several possible scenarios. Check the following cases:
 
 #### Permisson is not enough
