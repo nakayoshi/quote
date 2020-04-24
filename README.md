@@ -31,7 +31,7 @@ Shows this help
 
 ## How it works
 
-Quote uses Discord's Webhook API to send messages with a customized username and an avatar. We delete the original message and use this technique to pretend the message as if it was sent by another user.
+Quote uses Discord's Webhook API to send messages with a customised username and an avatar. We delete the original message and use this technique to pretend the message as if it was sent by another user.
 
 ## FAQ
 
