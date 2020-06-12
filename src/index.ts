@@ -1,9 +1,9 @@
-import path from "path";
-import dotenv from "dotenv";
-import Discord from "discord.js";
-import outdent from "outdent";
-import { fromEvent } from "rxjs";
-import { first, filter } from "rxjs/operators";
+import path from 'path';
+import dotenv from 'dotenv';
+import Discord from 'discord.js';
+import outdent from 'outdent';
+import { fromEvent } from 'rxjs';
+import { first, filter } from 'rxjs/operators';
 import {
   mimic,
   toEmbed,
@@ -11,23 +11,26 @@ import {
   match,
   not,
   fetchMessageByText,
-  removeEmptyLines
-} from "./utils";
-import { URL, MARKDOWN } from "./regexps";
+  removeEmptyLines,
+} from './utils';
+import { URL, MARKDOWN } from './regexps';
 
-dotenv.config({ path: path.join(__dirname, "../.env") });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const client = new Discord.Client();
-const ready$ = fromEvent<void>(client, "ready");
-const message$ = fromEvent<Discord.Message>(client, "message");
+const ready$ = fromEvent<void>(client, 'ready');
+const message$ = fromEvent<Discord.Message>(client, 'message');
 
 ready$.pipe(first()).subscribe(async () => {
-  if (!client.user) return;
+  if (client.user == null) {
+    return;
+  }
+
   console.log(`Logged in as ${client.user.tag}`);
 
   await client.user.setActivity({
-    type: "LISTENING",
-    name: "/help"
+    type: 'LISTENING',
+    name: '/help',
   });
 });
 
@@ -38,10 +41,10 @@ ready$.pipe(first()).subscribe(async () => {
  */
 message$
   .pipe(
-    filter(message => message.content.startsWith("/help")),
-    filter(not(isBot))
+    filter((message) => message.content.startsWith('/help')),
+    filter(not(isBot)),
   )
-  .subscribe(async message => {
+  .subscribe(async (message) => {
     await message.channel.send(outdent`
       **Quote** allows you to quote messages in a better way.
 
@@ -66,24 +69,29 @@ message$
  */
 message$
   .pipe(filter(not(isBot)), filter(match(MARKDOWN)))
-  .subscribe(async message => {
-    if (!client.user) return;
+  .subscribe(async (message) => {
+    if (client.user == null) {
+      return;
+    }
 
-    const fragments = message.content.match(new RegExp(MARKDOWN, "gm")) ?? [];
+    const fragments = message.content.match(new RegExp(MARKDOWN, 'gm')) ?? [];
     const text = fragments
-      .map(fragment => fragment.match(MARKDOWN)?.groups?.text)
-      .filter(match => !!match)
-      .join("\n");
+      .map((fragment) => fragment.match(MARKDOWN)?.groups?.text)
+      .filter((match) => match != null)
+      .join('\n');
 
     const quote = await fetchMessageByText(text, message.channel, [message.id]);
-    if (!quote) return;
+
+    if (quote == null) {
+      return;
+    }
 
     const content = removeEmptyLines(
-      message.content.replace(new RegExp(MARKDOWN, "gm"), "")
+      message.content.replace(new RegExp(MARKDOWN, 'gm'), ''),
     );
 
     await mimic(content, message, client.user.id, {
-      embeds: [toEmbed(quote)]
+      embeds: [toEmbed(quote)],
     });
   });
 
@@ -94,12 +102,13 @@ message$
  */
 message$
   .pipe(filter(not(isBot)), filter(match(URL)))
-  .subscribe(async message => {
-    if (!client.user) return;
-    if (!message.guild) return;
+  .subscribe(async (message) => {
+    if (client.user == null || message.guild == null) {
+      return;
+    }
 
-    const urls = message.content.match(new RegExp(URL, "gm")) ?? [];
-    const matches = urls.map(url => url.match(URL));
+    const urls = message.content.match(new RegExp(URL, 'gm')) ?? [];
+    const matches = urls.map((url) => url.match(URL));
     const embeds: Discord.MessageEmbed[] = [];
 
     for (const match of matches) {
@@ -112,23 +121,31 @@ message$
       }
 
       const { guildId, channelId, messageId } = match.groups;
-      if (guildId !== message.guild.id) continue;
+
+      if (guildId !== message.guild.id) {
+        continue;
+      }
 
       const channel = await client.channels.fetch(channelId);
-      if (!(channel instanceof Discord.TextChannel)) continue;
+
+      if (!(channel instanceof Discord.TextChannel)) {
+        continue;
+      }
 
       const quote = await channel.messages.fetch(messageId);
       embeds.push(toEmbed(quote));
     }
 
-    if (!embeds.length) return;
+    if (embeds.length === 0) {
+      return;
+    }
 
     const content = removeEmptyLines(
-      message.content.replace(new RegExp(URL, "gm"), "")
+      message.content.replace(new RegExp(URL, 'gm'), ''),
     );
 
     await mimic(content, message, client.user.id, {
-      embeds
+      embeds,
     });
   });
 
