@@ -15,6 +15,13 @@ const PTB_URL_EXAMPLE =
   "/443678718792040448" +
   "/678429687126556692";
 
+const HAS_NOT_APP_URL_EXAMPLE =
+  "https://discord.com" +
+  "/channels" +
+  "/443502244734828556" +
+  "/443678718792040448" +
+  "/678429687126556692";
+
 describe("RegExps", () => {
   it("matches markdown blockquote", () => {
     const match = "> lorem ipsum".match(MARKDOWN);
@@ -35,6 +42,13 @@ describe("RegExps", () => {
 
   it("matches URL quote (Public Beta)", () => {
     const match = PTB_URL_EXAMPLE.match(URL);
+    expect(match?.groups?.guildId).toBe("443502244734828556");
+    expect(match?.groups?.channelId).toBe("443678718792040448");
+    expect(match?.groups?.messageId).toBe("678429687126556692");
+  });
+
+  it("matches URL quote (discord.com)", () => {
+    const match = HAS_NOT_APP_URL_EXAMPLE.match(URL);
     expect(match?.groups?.guildId).toBe("443502244734828556");
     expect(match?.groups?.channelId).toBe("443678718792040448");
     expect(match?.groups?.messageId).toBe("678429687126556692");
