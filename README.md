@@ -75,6 +75,13 @@ cp .env.example .env
 vim .env
 ```
 
+Create a storage file
+
+```
+touch persistence.json
+echo "{}" > persistence.json
+```
+
 Here's the detail of the environment variables
 
 | env | nullability | description |
