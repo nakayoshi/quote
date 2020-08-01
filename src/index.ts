@@ -43,8 +43,9 @@ const afterQuote = async (_author: Discord.User) => {
     });
   } finally {
     const newAuthor = await userRepository.find(_author.id);
+    const FEEDBACK_THRESHOLD = 5;
     if (newAuthor == null) return;
-    if (newAuthor.quoteCount === 3) {
+    if (newAuthor.quoteCount === FEEDBACK_THRESHOLD) {
       return askForFeedback(_author);
     }
   }
@@ -60,6 +61,8 @@ const askForFeedback = (user: Discord.User) => {
 
     :star: Quote is developed in open-source on GitHub so please star us. Also, let us know if you have any trouble or idea!
     <https://github.com/nakayosh/quote>
+    
+    > *This message has been sent to users who quoted 5 times since 1st Aug 2020*
   ` });
 }
 
