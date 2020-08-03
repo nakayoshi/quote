@@ -65,10 +65,10 @@ I don't know ¯\\\_(ツ)\_/¯ Tell them to hire me.
 First of all, clone this repository using git.
 
 ```
-git clone https://github.com/neet/quote.git
+git clone https://github.com/nakayoshi/quote.git
 ```
 
-Copy the example of cofiguration file then edit it
+Copy the example of configuration file then edit it
 
 ```
 cp .env.example .env

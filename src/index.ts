@@ -4,6 +4,8 @@ import Discord from 'discord.js';
 import outdent from 'outdent';
 import { fromEvent } from 'rxjs';
 import { first, filter } from 'rxjs/operators';
+
+import packageJSON from '../package.json';
 import {
   mimic,
   toEmbed,
@@ -60,7 +62,7 @@ const askForFeedback = (user: Discord.User) => {
     https://top.gg/bot/678185722473349120
 
     :star: Quote is developed in open-source on GitHub so please star us. Also, let us know if you have any trouble or idea!
-    <https://github.com/nakayosh/quote>
+    <${packageJSON.homepage}>
     
     > *This message has been sent to users who quoted 5 times since 1st Aug 2020*
   ` });
@@ -103,7 +105,7 @@ message$
       Shows usage of Quote.
 
       See also GitHub for more information:
-      https://github.com/nakayosh/quote
+      ${packageJSON.homepage}
     `);
   });
 
