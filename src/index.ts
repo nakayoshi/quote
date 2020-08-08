@@ -5,7 +5,6 @@ import outdent from 'outdent';
 import { fromEvent } from 'rxjs';
 import { first, filter } from 'rxjs/operators';
 
-import packageJSON from '../package.json';
 import {
   mimic,
   toEmbed,
@@ -53,19 +52,22 @@ const afterQuote = async (_author: Discord.User) => {
   }
 }
 
-const askForFeedback = (user: Discord.User) => {
-  user.send({
+const askForFeedback = async (user: Discord.User) => {
+  await user.send({
+    files: ['https://i.imgur.com/ThgdSDE.png'],
+  });
+  await user.send({
     content: outdent`
-    > **Love using Quote? :eyes: **
+    Thank you for using Quote! If you have minutes I'd appreciate it if you **give us a feedback**.
 
     :arrow_up: Don't forget to up-vote us on Top.gg to help other people to discover this bot!
-    https://top.gg/bot/678185722473349120
+    <https://top.gg/bot/678185722473349120>
 
     :star: Quote is developed in open-source on GitHub so please star us. Also, let us know if you have any trouble or idea!
-    <${packageJSON.homepage}>
-    
+    <https://github.com/nakayoshi/quote>
+
     > *This message has been sent to users who quoted 5 times since 1st Aug 2020*
-  ` });
+` });
 }
 
 ready$.pipe(first()).subscribe(async () => {
@@ -105,7 +107,7 @@ message$
       Shows usage of Quote.
 
       See also GitHub for more information:
-      ${packageJSON.homepage}
+      https://github.com/nakayoshi/quote
     `);
   });
 
