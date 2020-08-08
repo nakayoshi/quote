@@ -61,10 +61,10 @@ const askForFeedback = async (user: Discord.User) => {
     Thank you for using Quote! If you have minutes I'd appreciate it if you **give us a feedback**.
 
     :arrow_up: Don't forget to up-vote us on Top.gg to help other people to discover this bot!
-    <https://top.gg/bot/678185722473349120>
+    <https://bit.ly/2DL4B6U>
 
     :star: Quote is developed in open-source on GitHub so please star us. Also, let us know if you have any trouble or idea!
-    <https://github.com/nakayoshi/quote>
+    <https://bit.ly/2PCtNiA>
 
     > *This message has been sent to users who quoted 5 times since 1st Aug 2020*
 ` });
