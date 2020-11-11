@@ -15,60 +15,12 @@ import {
   removeEmptyLines,
 } from './utils';
 import { URL, MARKDOWN } from './regexps';
-import { UserRepository } from './user-repository';
-import { UserRepositoryFsImpl } from './user-repository-fs-impl';
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const client = new Discord.Client();
 const ready$ = fromEvent<void>(client, 'ready');
 const message$ = fromEvent<Discord.Message>(client, 'message');
-let userRepository: UserRepository;
-
-const afterQuote = async (_author: Discord.User) => {
-  const author = await userRepository.find(_author.id);
-
-  try {
-    if (author == null) {
-      return userRepository.save({
-        id: _author.id,
-        tag: _author.tag,
-        quoteCount: 1,
-      });
-    }
-
-    return userRepository.update({
-      id: author.id,
-      tag: author.tag,
-      quoteCount: author.quoteCount + 1,
-    });
-  } finally {
-    const newAuthor = await userRepository.find(_author.id);
-    const FEEDBACK_THRESHOLD = 5;
-    if (newAuthor == null) return;
-    if (newAuthor.quoteCount === FEEDBACK_THRESHOLD) {
-      return askForFeedback(_author);
-    }
-  }
-}
-
-const askForFeedback = async (user: Discord.User) => {
-  await user.send({
-    files: ['https://i.imgur.com/ThgdSDE.png'],
-  });
-  await user.send({
-    content: outdent`
-    Thank you for using Quote! If you have minutes I'd appreciate it if you **give us a feedback**.
-
-    :arrow_up: Don't forget to up-vote us on Top.gg to help other people to discover this bot!
-    <https://bit.ly/2DL4B6U>
-
-    :star: Quote is developed in open-source on GitHub so please star us. Also, let us know if you have any trouble or idea!
-    <https://bit.ly/2PCtNiA>
-
-    > *This message has been sent to users who quoted 5 times since 1st Aug 2020*
-` });
-}
 
 ready$.pipe(first()).subscribe(async () => {
   if (client.user == null) {
@@ -142,8 +94,6 @@ message$
     await mimic(content, message, client.user.id, {
       embeds: [toEmbed(quote)],
     });
-
-    await afterQuote(message.author);
   });
 
 /**
@@ -198,11 +148,8 @@ message$
     await mimic(content, message, client.user.id, {
       embeds,
     });
-
-    await afterQuote(message.author);
   });
 
 (async () => {
-  userRepository = await UserRepositoryFsImpl.init();
   await client.login(process.env.DISCORD_TOKEN);
 })();
